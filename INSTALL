@@ -1,0 +1,15 @@
+        Cách biên dịch phần mềm
+
+1. Yêu cầu:
+ - Qt4, 4.6 trở lên
+ - boost library
+ - cmake 2.6 trở lên
+ 
+ Trình biên dịch: gcc 4.7. Với trình biên dịch khác thì phải sửa file
+ CMakeLists.txt.
+
+ 2. Biên dịch
+ - Bước 1: Tạo makefile
+ cmake CMakeLists.txt
+ - Bước 2: biên dịch
+ make -j3
