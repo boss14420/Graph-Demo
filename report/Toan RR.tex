@@ -117,6 +117,7 @@ $$ w(P) = \sum \limits_{i=0}^{k-1}{\displaystyle{w(v_{i}, v_{i+1})}} $$ \\
 %\subsection{Các thuật toán tìm đường đi ngắn nhất từ một đỉnh đến tất cả các đỉnh còn lại (single-source shortest path)}
 %\subsubsection{Thuật toán tìm kiếm theo chiều rộng ứng dụng tìm đường đi ngắn nhất trên đồ thị theo số cạnh}
 \subsection{Thuật toán tìm kiếm theo chiều rộng ứng dụng tìm đường đi ngắn nhất trên đồ thị theo số cạnh}
+    \subsubsection{Mô tả thuật toán}
 Xét đồ thị có hướng hoặc vô hướng không trọng số $ G = (V, E) $ có n đỉnh và m cạnh, khi đó ta chỉ quan tâm xem giữa hai đỉnh bất kỳ của đồ thị có cạnh hay không. Ta quy ước $w(u, v) = 1 $ nếu có cạnh nối $u$ và $v$, ngược lại $ w(u, v) = 0 $. Bài toán trong trường họp này trở thành tìm đường đi ngắn nhất trên đồ thị theo số cạnh. Khi đó, ta có thể dùng thuật toán tìm kiếm (duyệt) đồ thị theo chiều rộng $ (BFS) $ để giải bài toán vì $ BFS(s) $ cho phép ta thăm tất cả các đỉnh thuộc cùng một thành phần liên thông với $s$. Phía dưới là thủ tục được viết dưới dạng mã giả mô tả thuật toán:\\
 
 \begin{minted}[tabsize=4,linenos=true,frame=single, mathescape=true]{python}
@@ -140,8 +141,8 @@ def BFS(s, V):
                p[u] = v
                In_queue[u] = True;
 \end{minted}
-	
-	
+    
+    \subsubsection{Nhận xét}
 	\begin{itemize}
 		\item Sau khi thực hiện thủ tục này, nếu $ In\_queue[t] = True $ thì tồn tại đường đi từ $s$ đến $t$, ngược lại không có đường đi.
 		\item Biến $ p[u] $ dùng để ghi nhận đỉnh đi trước đỉnh u trong đường đi từ $s$ đến $t$.
@@ -153,6 +154,7 @@ def BFS(s, V):
 %----------------------------------------
 
 \subsection{Thuật toán Ford-Bellman}
+    \subsubsection{Mô tả thuật toán}
 	Thuật toán Ford-Bellman được sử dụng trong việc tìm đường đi ngắn nhất từ một đỉnh $s$ đến tất cả các đỉnh còn lại. Nó có một ưu điểm rất hay đó là có thể làm việc với đồ thị có trọng số các cung tùy ý.\\
 	Thuật toán được xây dựng dựa trên tư tưởng sau: Xét đồ thị có hướng $ G = (V, E) $ có $n$ đỉnh với $s$ là đỉnh xuất phát và $ a[u, v] $, $u$, $ v \epsilon V $ là ma trận trọng số. Giả thiết đồ thị không có chu trình âm, ta gọi $ d[v] $ là khoảng cách từ $s$ đến $v$. Ta khởi tạo $ d[s] = 0 $ và $ d[v] = \infty $ với $ v  s $. Xét mọi cạnh $ (u, v) $ của đồ thị, nếu có cạnh nào thỏa mãn bất đẳng thức $ d[u] + a[u, v] < d[v] $ thì ta gán $ d[v] = d[u] + a[u, v] $ để tối ưu hóa $ d[v] $. Tức là nếu độ dài đường đi từ $s$ tới $v$ lại lớn hơn tổng độ dài đường đi từ $s$ đến $u$ cộng với chi phí đi từ $u$ đến $v$ thì ta hủy bỏ đường đi từ $s$ đến $v$ đang có và thay vào đó là con đường từ $s$ đến $u$ và từ $u$ đến $v$. Thuật toán sẽ kết thúc khi không thể tối ưu thêm bất kỳ $d[v]$ nào nữa. Dưới đây là mã giả mô tả thuật toán:\\
 
@@ -170,7 +172,7 @@ def Ford_Bellman(s):
                     p[v] = u
 \end{minted}
 
-\textbf{Chứng minh tính đúng đắn của thuật toán:}
+    \subsubsection{Chứng minh tính đúng đắn của thuật toán:}
 \begin{itemize}
 
 	\item Sau khi khởi tạo $ d[s] = 0 $ và $ d[v != s] = \partial $, dãy $ d[v] $ chính là độ dài ngắn nhất của đường đi từ $s$ đến $v$ không quá $0$ cạnh.
@@ -178,7 +180,7 @@ def Ford_Bellman(s):
 	\item Sau lần lặp thứ $ n-1 $, ta có $ d[v] $  bằng độ dài đường đi ngắn nhất từ $s$ tới $v$ qua không quá $ n-1 $ cạnh. Vì đồ thị không có chu trình âm nên sẽ có một đường đi ngắn nhất từ s đến v là đường đi cơ bản, tức là d[v] là độ dài đường đi ngắn nhất từ $s$ đến $v$.
 
 \end{itemize}
-Nhận xét:
+    \subsubsection{Nhận xét:}
 \begin{itemize}
 
 	\item Độ phức tạp của thuật toán là $ O(n^{3}) $.
@@ -197,6 +199,7 @@ for u in Adjacency[v]:
 %----------------------------------------------------
 
 \subsection{Thuật toán Dijkstra}
+    \subsubsection{Mô tả thuật toán}
 	Trong trường hợp trọng số trên các cung là không âm, thuật toán Dijkstra để tìm đường đi ngắn nhất từ đỉnh $ s $ đến các đỉnh còn lại của đồ thị làm việc hiệu quả hơn so với thuật toán Ford-Bellman.\\
 	Ý tưởng của thuật toán là gán cho các đỉnh các nhãn tạm thời cho biết cân trên của đọ dài đường đi ngắn nhất từ s đến đỉnh đó. Các nhãn được biến đổi theo một thủ tục lặp. Mỗi bước lặp sẽ có một nhãn tạm thời trở thành nhãn cố định. Nếu nhãn của một đỉnh nào đó trở thành nhãn cố định thì nó sẽ cho ta không phải là cận trên mà là độ dài đường đi ngắn nhất từ đỉnh s đến đỉnh nó.\\
 	Sau đây là mã giả mô tả thuật toán:\\
@@ -222,7 +225,7 @@ def Dijkstra(s):
 \end{minted}
 
 
-Chứng minh tính đúng đắn của thuật toán:\\
+    \subsubsection{Chứng minh tính đúng đắn của thuật toán:}
 \begin{itemize}
 
 	\item Giả sử ở một bước lặp nào đó các nhãn cố định cho ta độ dài các đường đi ngắn nhất từ $s$ đến các đỉnh có nhãn cố định, ta sẽ chứng minh rằng ở lần lặp tiếp theo nếu đỉnh $ u\* $ thu được nhãn cố định thì $ d[u\*] $ chính là độ dài đường đi ngắn nhất từ $s$ đến $ u\* $.
@@ -232,7 +235,7 @@ Chứng minh tính đúng đắn của thuật toán:\\
 
 \end{itemize}
 
-Nhận xét:\\
+    \subsubsection{Nhận xét:}
 \begin{itemize}
 	\item Đơn giản, dễ cài đặt.
 	\item Trong trường hợp tìm $u$ bằng tìm kiếm tuyến tính, độ phức tạp thuật toán là $ O(n^{2}) $.
@@ -245,6 +248,96 @@ Nhận xét:\\
 
 \end{itemize}
 
+%--------------------------------------------------
+
+\subsection{Thuật toán $A^{*}$}
+
+
+	$ A^{*} $ là một thuật toán tìm kiếm trong đồ thị có trọng số không âm,
+        tìm đường đi từ một đỉnh khởi đầu $s$ đến một đỉnh đích $t$ cho trước, sử dụng một hàm heuristic ước lượng khoảng cách từ nút hiện tại đến nút đích (trạng thái đích), và nó sẽ duyệt đồ thị theo thứ tự ước lượng Heuristic này.\\
+	\subsubsection{Ý tưởng:}
+
+
+	Xét bài toán tìm đường, $ A^{*} $ sẽ xây dựng tăng dần các tuyến đường từ đỉnh xuất phát đến khi nó tìm thấy đường đi chạm đến đích. Để xác định khả năng dẫn đến đích, $ A^{*} $ sử dụng một đánh giá heuristic về khoảng cách từ một điểm bất kì cho trước đến đích. Trong ví dụ về bài toán tìm đường đi giao thông  này thì đánh giá heuristic là khoảng cách đường chim bay từ điểm cho trước đến điểm đích.
+	
+	
+        Yêu cầu của hàm đánh giá $h(x)$ là nó phải \textit{tối ưu (optimistic
+        heuristic)}, nghĩa là giá trị của nó phải không vượt quá
+        giá trị thực (độ dài đường đi từ $x$ đến đích $t$). Tức là $h(x) \leq
+        d[x, t] , \forall x \in V$.
+
+	\subsubsection{Mô tả thuật toán:}
+
+
+        Thuật toán $A^{*}$ được cài đặt dựa trên một tập hợp gọi là \textit{tập
+        mở (OPEN SET)}. Ban đâu \textit{OPEN SET} chỉ chứa đỉnh nguồn $s$,
+        những đỉnh khác ở trong tập này có nghĩa là nó đã được \textit{phát
+        hiện (discovered)} bởi thuật toán (do được nối với một đỉnh thuộc
+        \textit{OPEN SET} trước đó) nhưng chưa phân tích tiếp các đỉnh kề với
+        nó. Khi đã phân tích hết thì đỉnh này được loại ra khỏi \textit{OPEN
+        SET}. \\
+        Ở mỗi lần lặp thì chọn một đỉnh v trong \textit{OPEN SET} sao cho khoảng
+        cách đến đích theo dự đoán của nó là nhỏ nhất. Tức $f(v) = g(v) + h(v)$
+        nhỏ nhất, trong đó $g(v)$ là chi phí nhỏ nhất từ nguồn $s$ đến $v$
+        (tính được cho đến thời điểm hiện tại), $h(v)$ là đánh giá heuristic về
+        chi phí từ $v$ đến đích $t$. Sau khi đã chọn được đỉnh $v$, tối ưu hoá
+        đường đi ngắn nhất của các đỉnh kề với $v$ (như trong thuật toán
+        Dijkstra), nếu đỉnh kề đó không thuộc \textit{OPEN SET} thì cho vào.
+        Sau đó loại $v$ ra khỏi \textit{OPEN SET}.\\
+        Thuật toán dừng lại khi \textit{OPEN SET} rỗng.
+
+
+\begin{minted}[tabsize=4,linenos=true,frame=single, mathescape=true]{python}
+def AStar(s, t)
+    #init
+    for v in V:
+        f[v] = d[v] = Infinity
+        p[v] = v
+
+    d[s] = 0
+    f[s] = h(s)
+    openset = {s}
+
+    while Not openset.empty():
+        v = openset.min()
+        if v == t: #target found
+            return
+        for u in Adjacency[v]:
+            if d[u] > d[v] + a[v,u]:
+                d[u] = d[v] + a[v,u]
+                p[u] = v
+                f[u] = d[u] + h(u)
+                if u in openset:
+                    openset.insert(u)
+        openset.remove(v)
+
+    return # target not found
+\end{minted}
+
+    \subsubsection{Nhận xét}
+\begin{itemize}
+    \item Để dễ dàng lấy ra đỉnh $v$ có $f[v]$ nhỏ nhất từ \textit{OPEN SET}
+        thì \textit{OPEN SET} nên được cài đặt dưới dạng \textit{hàng đợi ưu
+        tiên (priority queue)}.
+    \item Có thể dùng \textit{Bảng màu (COLOR MAP)} để ghi nhận trạng thái của
+        mỗi đỉnh. Ban đầu, tất cả là \textit{trắng (white)}, khi đưa vào
+        \textit{OPEN SET} thì có màu \textit{xám (gray)}, đỉnh được đưa ra khỏi
+        \textit{OPEN SET} sẽ có màu \textit{đen (black)}. Nhờ đó mà việc xác
+        định xem đỉnh $u$ có thuộc $openset$ hay không (dòng 20) có thể thực
+        hiện trong thời gian $O(1)$.
+    \item Nếu $h()$ là hàm \textit{đơn điệu (consistent heuristic function)} (
+        tức là $h()$ có tính chất $h(x) \leq a[x,y] + h(y), \forall x,y \in V$)
+        thì với mỗi đỉnh $u$ bị loại khỏi $openset$ ($color[u] = black$),
+        $d[v]$ đã được tối ưu. Do đó nếu sau này gặp lại $u$ thì ta không cần
+        kiểm trả điều kiện ở dòng 16 nữa.
+    \item Thuật toán Dijkstra là trường hợp đặc biệt của $A^{*}$, với $h(v) =
+        0, \forall v in V$. Ta thấy hàm $h()$ này vừa là \textit{optimistic}
+        vừa là \textit{consistent}, nên ở phần cài đặt thuật toán Dijkstra, ta
+        chỉ cần phải kiểm tra điều kiện tối ưu khi đỉnh $v$ còn thuộc tập
+        $T$. 
+\end{itemize}
+
+
 %----------------------------------------
 
 \subsection{Thuật toán tìm đường đi ngắn nhất trên đồ thị không có chu trình}
@@ -252,6 +345,7 @@ Nhận xét:\\
         trọng số là số thực tùy ý hoàn toàn có thể giải được với thuật toán 
         với độ phức tạp tốt hơn thuật toán Ford - Bellman.\\
 
+        \subsubsection{Mô tả thuật toán}
         \textbf{Bước 1:} Với một đồ thị không có chu trình, rõ ràng nếu tồn tại đường đi từ $i$
         đến $j$ thì sẽ không tồn tại đường đi từ $j$ đến $i$. Do đó, không mất
         tính tổng quát, ta có thể \textit{đánh số lại (\textbf{topological
@@ -298,7 +392,7 @@ def TopologySort(s):
                 thể bỏ qua việc thực hiện DFS khi $v = t$. Nếu kết thúc thuật
                 toán mà $t$ chưa được đánh số thì có nghĩa là không tìm được
                 đường đi từ $s$ đến $t$.
-            \item Nếu trong khi thực hiện DFS phát hiện được một \textif{cạnh ngược
+            \item Nếu trong khi thực hiện DFS phát hiện được một \textit{cạnh ngược
                 (\textbf{back edge})} thì đồ thị có chu trình, ta có thể kết
                 thúc bài toán ngay tại đây.
             \item Thuật toán trả về số đỉnh đã được đánh số lại.
@@ -346,6 +440,8 @@ def DAGShortestPath(s):
 
 \subsection{Thuật toán Floyd-Warshall}
 	Ta có thể giải bài toán tìm đường đi ngắn nhất giữa tất cả các đỉnh của đồ thị bằng cách sử dụng  $n$ lần thuật toán Ford-Bellman (độ phức tạp trở thành $ O(n^{4})) $ hoặc thuật toán Dijkstra (độ phức tạp trở thành $ O(n^{3}) $). Tuy nhiên, với trường hợp tổng quát, ta phải sử dụng thuật toán Floyd-Warshall.
+
+    \subsubsection{Mô tả thuật toán}
 Tư tưởng của thuật toán này là với mọi đỉnh k của đồ thị được xét theo thứ tự từ $1$ đến $n$, xét mọi cặp đỉnh $ (u, v) $, ta làm cực tiểu hóa $ d[u, v] $ theo công thức: $ d[u, v] = min(d[u, v], d[u,k] + d[k, v]) $. Tức là nếu đường đi từ $u$ đến $v$ đang có lại dài hơn đường đi từ $u$ đến $k$ cộng với đường đi từ $k$ đến $v$ thì ta hủy bỏ đường đi từ $u$ đến $v$ hiện tại và thay vào đó là hai đường từ $u$ đến $k$ và từ $k$ đến $v$.
 Sau đây là mã giả mô tả thuật toán:\\
 \begin{minted}[tabsize=8,linenos=true,frame=single, mathescape=true]{pascal}
@@ -369,7 +465,7 @@ procedure Floyd_Warshall
 \end{minted}
 
 
-Chứng minh tính đúng đắn của thuật toán:\\
+    \subsubsection{Chứng minh tính đúng đắn của thuật toán:}
 \begin{itemize}
 	\item Gọi $ a^{k}[u, v] $ là độ dài đường đi ngắn nhất từ u đến v mà chỉ đi qua các đỉnh trung gian thuộc tập $ {1, 2, \ldots, k} $, khi đó với $ k = 0 $ thì $ a^{0}[u, v] = a[u, v] $.
 	\item Giả sử ta đã tính được các $ - a^{k-1}[u, v] $ thì $ a^{k}[u, v] $ sẽ được xây dựng như sau:
@@ -381,57 +477,13 @@ Chứng minh tính đúng đắn của thuật toán:\\
 	\item Cuối cùng, ta có $ a^{n}[u, v] $ là đường đi ngắn nhất từ $u$ đến $v$ mà chỉ đi qua các đỉnh trung gian thuộc tập $ {1, 2, \ldots, n} $.
 
 \end{itemize}
-Nhận xét:\\
+
+    \subsubsection{Nhận xét:}
 \begin{itemize}
  \item Khi cài đặt thuật toán, ta không có khái niệm $ a^{k}[u, v] $ mà sẽ thao tác trực tiếp với $ a[u, v] $.$ a[u, v] $ tại bước tối ưu thứ $k$ sẽ được tính toán để bằng $ min(a[u, v]), a^{k-1}[u, k] + a^{k-1}[k, v]) $.
  \item Độ phức tạp thuật toán là $ O(n^{3}) $.
 
 \end{itemize}
-
-%--------------------------------------------------
-
-\subsection{Thuật toán A^{*}}
-
-
-	$ A^{*} $ là một thuật toán tìm kiếm trong đồ thị, tìm đường đi từ một nút khởi đầu đến một nút đích cho trước sử dụng một hàm heuristic ước lượng khoảng cách từ nút hiện tại đến nút đích (trạng thái đích), và nó sẽ duyệt đồ thị theo thứ tự ước lượng Heuristic này.\\
-	\textbf{Ý tưởng:}
-
-
-	Xét bài toán tìm đường, $ A^{*} $ sẽ xây dựng tăng dần các tuyến đường từ đỉnh xuất phát đến khi nó tìm thấy đường đi chạm đến đích. Để xác định khả năng dẫn đến đích, $ A^{*} $ sử dụng một đánh giá heuristic về khoảng cách từ một điểm bất kì cho trước đến đích. Trong ví dụ về bài toán tìm đường đi giao thông  này thì đánh giá heuristic là khoảng cách đường chim bay từ điểm cho trước đến điểm đích.
-	
-	
-	$ A^{*} $ đảm bảo tính đầy đủ và tối ưu, nó luôn tìm thấy đường đi ngắn nhất nếu tồn tại một đường đi như thế. Đầy đủ và tối ưu hơn các thuật toán tìm đường đi khác ở chỗ nó không chỉ ước lượng khoảng cách còn lại (nhờ đánh giá heuristic) mà còn tính khoảng cách đã đi qua để tìm được đường đi ngắn nhất.\\
-	\textbf{Mô tả thuật toán:}
-
-
-	$ A^{*} $ lưu giữ một tập các đường đi qua đồ thị, bắt đầu từ nút xuất phát. Tập lời giải này được lưu trong một hàng đợi ưu tiên (priority queue). Thứ tự ưu tiên gán cho một đường đi $x$ được quyết định bởi hàm $ f(x) = g(x) + h(x) $.
-
-
-
-	Trong đó, $ g(x) $ là chi phí của đường đi cho đến thời điểm hiện tại, nghĩa là tổng trọng số của các cạnh đã đi qua. $ h(x) $ là hàm đánh giá heuristic về chi phí nhỏ nhất để đến đích từ $x$. Ví dụ, nếu “chi phí” được tính là khoảng cách đã đi qua, khoảng cách đường chim bay giữa hai điểm trên một bản đồ là một đánh giá heuristic cho khoảng cách còn phải đi tiếp.\\
-
-$ f(x) $ có giá trị càng thấp thì độ ưu tiên của $x$ càng cao, ta sử dụng $ f(x) $ này để xác định nút tiếp theo.
-
-
-	\textbf{Mô tả thuật toán}:
-
-\begin{minted}[tabsize=8,linenos=true,frame=single, mathescape=true]{pascal}
-function A*(diem_xuat_phat,dich)
-    var dong := tap_rong
-    var q := tao_hang_doi(tao_duong_di(diem_xuat_phat))
-    while q khong phai tep rong
-        var p := lay_phan_tu_dau_tien(q)
-        var x := nut cuoi cung cua p
-        if x in dong
-            continue
-        if x = dich
-            return p
-        bo sung x vao tep dong
-        foreach y in cac duong di tiep theo(p)
-            dua_vao_hang_doi(q, y)
-    return failure
-\end{minted}
-
 %========================Phan II================================
 
 \chapter{Giới thiệu về Project minh họa các thuật toán tìm đường đi ngắn nhất trên đồ thị bằng giao diện đồ họa}
