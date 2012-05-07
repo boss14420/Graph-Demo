@@ -55,6 +55,8 @@ Edge::Edge(Vertex *_source, Vertex *_dest, edge_tag::NoWeight,
     setAcceptedMouseButtons(Qt::LeftButton);
     source->addOutEdge(this);
     dest->addInEdge(this);
+
+    m_property = { 1 };
     adjust();
 }
 /* */
@@ -122,8 +124,13 @@ Vertex *Edge::sourceVertex() const {
     return source;
 }
 
-EdgeProperty<int> Edge::property() {
+EdgeProperty<int> Edge::property() const {
     return m_property; 
+}
+
+void Edge::setProperty(EdgeProperty<int> p) {
+    m_property = p;
+    update();
 }
 
 void Edge::adjust() {
@@ -222,9 +229,6 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     
     // Draw border
     if(isSelected()) {
-
-        qDebug() << "Draw line";
-
         painter->setPen(QPen(edgeState[m_state].color, 
                     edgeState[m_state].linewidth, Qt::DashLine));
         QLineF myLine = line();

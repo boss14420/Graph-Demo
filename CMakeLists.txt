@@ -5,6 +5,7 @@ PROJECT(GraphDemo)
 #SET(CMAKE_C_COMPILER "clang")
 
 find_package(Qt4 REQUIRED)
+FIND_LIBRARY(BOOST_GRAPH boost_graph)
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -13,9 +14,9 @@ SET(graphdemo_HEADERS graphwidget.h graphscene.h vertex.h edge.h weighttextitem.
 SET(graphdemo_QT_HEADERS graphwidget.h graphscene.h vertex.h edge.h weighttextitem.h mainwindow.h algchooser.h vertexlabel.h algorithm.h dijkstra.h bellman_ford.h bfs.h astar.h dag.h)
 SET(graphdemo_RESOURCES graphdemo.qrc)
 
-#SET(CMAKE_CXX_FLAGS "-Wall -O2 -march=native -ftree-vectorize -fomit-frame-pointer -DNDEBUG")
+SET(CMAKE_CXX_FLAGS "-Wall -O2 -std=c++11 -pedantic-errors -march=native -ftree-vectorize -fomit-frame-pointer -DNDEBUG")
 #SET(CMAKE_CXX_FLAGS "-Wall -O3 -march=native -std=gnu++0x -DNDEBUG -DQT_NO_DEBUG")
-SET(CMAKE_CXX_FLAGS "-Wall -g -O0 -std=c++11 -pedantic-errors -DNDEBUG")
+#SET(CMAKE_CXX_FLAGS "-Wall -g -O0 -std=c++11 -pedantic-errors -DNDEBUG")
 
 QT4_WRAP_CPP(graphdemo_HEADERS_MOC ${graphdemo_QT_HEADERS})
 QT4_ADD_RESOURCES(graphdemo_RESOURCES_RCC ${graphdemo_RESOURCES})
@@ -27,7 +28,7 @@ ADD_EXECUTABLE(graphdemo ${graphdemo_SOURCES}
                         ${graphdemo_HEADERS_MOC}
                         ${graphdemo_RESOURCES_RCC}
                 )
-TARGET_LINK_LIBRARIES(graphdemo ${QT_LIBRARIES})
+TARGET_LINK_LIBRARIES(graphdemo ${QT_LIBRARIES} ${BOOST_GRAPH})
 
 #INSTALL(TARGETS graphdemo
 #    RUNTIME DESTINATION "$ENV{DESTDIR}/usr/bin"

@@ -73,6 +73,7 @@ AlgorithmChooserDialog::AlgorithmChooserDialog(QWidget* parent, Qt::WindowFlags 
     bfsRadioButton = new QRadioButton(tr("Breadth-first-search (BFS)"), this);
     algorithmListButtonGroup->addButton(bfsRadioButton);
     algoLstLayout->addWidget(bfsRadioButton);
+    bfsRadioButton->setChecked(true); // default algo
 //    connect(noWeightRadioButton, SIGNAL(toggled(bool)),
 //            bfsRadioButton, SLOT(setEnabled(bool)));
 //    bfsRadioButton->setEnabled(false);
@@ -80,7 +81,6 @@ AlgorithmChooserDialog::AlgorithmChooserDialog(QWidget* parent, Qt::WindowFlags 
     bellmanFordRadioButton = new QRadioButton(tr("Bellman-Ford"), this);
     algorithmListButtonGroup->addButton(bellmanFordRadioButton);
     algoLstLayout->addWidget(bellmanFordRadioButton);
-    bellmanFordRadioButton->setChecked(true); // default algo
 
     dijkstraRadioButton = new QRadioButton(tr("Dijkstra"), this);
     algorithmListButtonGroup->addButton(dijkstraRadioButton);

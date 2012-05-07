@@ -34,8 +34,8 @@
 	\begin{flushright}
 		\parbox[t]{8cm}{
 		\textbf{Nguyễn Duy Thành-}CNTT1 20102737\\
-		\textbf{Vũ Văn Hiệp-}CNTT2 20101545\\
-		\textbf{Bạch Văn Hải-}CNTT1 20101464}\\[12pt]
+                \textbf{Vũ Văn Hiệp-}CNTT2 20101545}\\[12pt]
+		%\textbf{Bạch Văn Hải-}CNTT1 20101464}\\[12pt]
 	\end{flushright}
 	
 	\hspace{5cm} Giáo viên\hspace{24pt} :
@@ -486,11 +486,107 @@ procedure Floyd_Warshall
 \end{itemize}
 %========================Phan II================================
 
-\chapter{Giới thiệu về Project minh họa các thuật toán tìm đường đi ngắn nhất trên đồ thị bằng giao diện đồ họa}
+\chapter{Minh họa các thuật toán tìm đường đi ngắn nhất trên đồ thị bằng giao diện đồ họa}
+\section{Giới thiệu}
+\begin{itemize}
+    \item Chương trình GraphDemo mô phỏng cách hoạt động của 5 thuật toán tìm đường
+    đi ngắn nhất trên đồ thị: BFS, Ford-Bellman, Dijkstra, $A^{*}$ và thuật toán
+    tìm đường đi ngắn nhất trên đồ thị có hướng không chu trình (DAG).\\
+    \item Chương trình chỉ hỗ trợ đơn đồ thị có hướng, đồ thị vô hướng có thể thay
+    bằng đồ thị có hướng với mỗi cạnh của nó thay bằng 2 cung ngược chiều có
+    cùng trọng số, đa đồ thị có thể thay bằng đơn đồ thị trong đó chỉ lấy cung
+    có trọng số nhỏ nhất trong số các cung nối 2 đỉnh với nhau.\\
+    \item Có thể lấy mã nguồn của chương trình tại
+        \textit{https://github.com/boss14420/Graph-Demo}. Hướng dẫn biên dịch
+        xem trong file INSTALL.
+\end{itemize}
+\section{Tính năng}
+\begin{itemize}
+    \item Vẽ đỉnh, cung, thay đổi trọng số ngay trên đồ thị,
+    \item Nhập, xuất đồ thì từ file. Xuất kết quả ra hình ảnh,
+    \item Mô phỏng các bước của thuật toán một cách liên tục hoặc gián đoạn. Có
+        thể dừng lại, tiến hoặc lùi từng bước một.
+\end{itemize}
+\section{Cách sử dụng}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{gd1}
+    \rule{35em}{0.5pt}
+    \caption{Hộp thoại chọn thuật toán}
+    \label{fig:AlgorithmChooser}
+\end{figure}
+
+
+    Khi mở chương trình, sẽ có hộp thoại chọn thuật toán
+    (\ref{fig:AlgorithmChooser}).\\
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.3]{gd2}
+    \rule{35em}{0.5pt}
+    \caption{Giao diện chính}
+    \label{fig:MainWindow}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{gd3}
+    \rule{35em}{0.5pt}
+    \caption{Thanh công cụ}
+    \label{fig:ToolBars}
+\end{figure}
+
+    Sau khi chọn thuật toán, giao diện chính của chương trình hiện ra
+    (\ref{fig:MainWindow}).\\
+    Để sửa đồ thị, sử dụng thanh công cụ (\ref{fig:ToolBars}) hoặc vào menu.
+    Muốn sửa trọng số thì nháy đúp vào trọng số đó.
+    Muốn chọn một đỉnh nào đó làm đỉnh nguồn/đích thì click chuột
+    phải vào định đó và chọn \textit{Set as source/target}.
+
+    Để bắt đầu chế độ mô phỏng, nhấn nút \textit{Play} hoặc \textit{Next} trên
+    thanh công cụ. Ở chế độ này không thể sửa được đồ thị.\\
+    Dùng các nút \textit{Next} hoặc \textit{Prev} để tiến/lùi từng bước mô
+    phỏng.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.3]{gd4}
+    \rule{35em}{0.5pt}
+    \caption{Mô phỏng thuật toán Dijkstra}
+    \label{fig:Dijkstra1}
+\end{figure}
+    
+    Hình \ref{fig:Dijkstra1}: một bước trung gian trong quá trình tìm kiếm
+    bằng thuật toán Dijkstra, trong đó:
+    \begin{itemize}
+        \item đỉnh màu đỏ là đỉnh nguồn,
+        \item đỉnh màu xanh là đỉnh đã được gán nhãn cố định, tức là đã tìm
+            được đường đi ngắn nhất từ nguồn đến nó. Ở đây, đỉnh $1$ đã được
+            gán nhãn cố định, khoảng cách từ nguồn đến $1$ là $20$.
+        \item đỉnh có màu xám là đỉnh đã được \textit{phát hiện (discovered)}
+            (có cung nối từ đỉnh màu xanh đến nó) nhưng chưa được gán nhãn cố
+            định.
+        \item đỉnh màu vàng là đỉnh chưa được xét.
+    \end
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.3]{gd5}
+    \rule{35em}{0.5pt}
+    \caption{Mô phỏng thuật toán Dijkstra}
+    \label{fig:Dijkstra2}
+\end{figure}
+    
+    Hình \ref{fig:Dijkstra2}: Kết thúc thuật toán, tất cả các định có thể tới
+    từ nguồn có màu xanh (đã tìm được đường đi ngắn nhất), những đỉnh không tìm
+    được đường đi ngắn nhất có màu vàng. Những cung màu tím là cung thành phần
+    của các đường đi ngắn nhất đã tìm được.\\
+    Kết thúc chế độ mô phỏng, nhấn nút \textit{Stop}. Bây giờ có thể tiếp tục
+    chỉnh sửa đồ thị.
 
 %========================Phan III================================
 
-\chapter{Kết luận}
+%\chapter{Kết luận}
 
 %==================================finish=========================
 				

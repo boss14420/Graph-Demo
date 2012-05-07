@@ -67,7 +67,8 @@ public:
     EdgeState state() const { return m_state; }
     void setState(EdgeState ec) { m_state = ec; update();}
 
-    EdgeProperty<int> property();
+    EdgeProperty<int> property() const;
+    void setProperty(EdgeProperty<int>);
 signals:
     void edgeWeightChanged();
 

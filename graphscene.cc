@@ -19,6 +19,11 @@
 #include <QtGui>
 #include <QDebug>
 
+//#include <boost/graph/graphml.hpp>
+#include <boost/graph/graphviz.hpp>
+#include <boost/graph/graph_traits.hpp>
+#include <boost/graph/adjacency_list.hpp>
+
 #include "edge.h"
 //#include "weighttextitem.h"
 #include "vertex.h"
@@ -378,6 +383,7 @@ void GraphScene::clearAllItems() {
 //    propertyList.clear();
 //    nEdge = 0;
     
+    vertexIndex = 0;
     algorithm->vertexList.clear();
     algorithm->selectedVertex = algorithm->sourceVertex
         = algorithm->destVertex = nullptr;
@@ -394,8 +400,117 @@ void GraphScene::setDest() {
     algorithm->setDest();
 }
 
+/* save and load file */
+
+namespace graph_save {
+    struct VertexProperty {
+        unsigned id;
+        qreal x, y;
+    };
+
+    typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS,
+                VertexProperty, EdgeProperty<int>> graph_t;
+    typedef std::pair<unsigned, unsigned> edge_t;
+}
+
 void GraphScene::loadFile(std::ifstream &in) {
+    using namespace graph_save;
+
+    clearAllItems();
+    auto& vertexList = algorithm->vertexList;
+    
+    graph_t g;
+
+    boost::dynamic_properties dp;
+    dp.property("id", boost::get(&VertexProperty::id, g));
+    dp.property("x", boost::get(&VertexProperty::x, g));
+    dp.property("y", boost::get(&VertexProperty::y, g));
+    dp.property("weight", boost::get(&EdgeProperty<int>::weight, g));
+
+    try {
+        boost::read_graphviz(in, g, dp, "id");
+    } catch(std::exception &ex) {
+        QMessageBox::warning(views()[0], tr("Read file Error!"), ex.what());
+        return;
+    }
+
+    // draw vertices
+    unsigned size = boost::num_vertices(g);
+    vertexIndex = size;
+    for(unsigned i = 0; i < size; ++i) {
+        VertexProperty vp = g[i];
+        Vertex *v = new Vertex(vp.x, vp.y, i);
+        algorithm->addVertex(v);
+        addItem(v);
+    }
+
+    // draw edges
+    boost::graph_traits<graph_t>::edge_iterator ei, ei_end;
+    for(boost::tie(ei, ei_end) = boost::edges(g); ei != ei_end; ++ei) {
+        boost::graph_traits<graph_t>::vertex_descriptor u, v;
+        u = boost::source(*ei, g), v = boost::target(*ei, g);
+        Edge *edge = algorithm->newEdge(vertexList[u], vertexList[v]);
+        
+        if(edge != nullptr) {
+            edge->setProperty(g[*ei]);
+            edge->setZValue(-1000.0);
+            addItem(edge);
+            edge->adjust();
+            connect(edge, SIGNAL(edgeWeightChanged()), 
+                    this, SIGNAL(graphChanged()));
+
+            algorithm->incEdge();
+        } else {
+            QMessageBox::warning(views()[0], tr("Read file Error!"),
+                    QString("Cannot create edge from %1 to %2!")
+                    .arg(g[u].id).arg(g[v].id));
+            clearAllItems();
+            vertexIndex = 0;
+            return;
+        }
+
+    }
+
 }
 
 void GraphScene::saveToFile(std::ofstream &out) {
+    using namespace graph_save;
+
+    auto& vertexList = algorithm->vertexList;
+    unsigned size = vertexList.size();
+
+    QList<edge_t> edgeList;
+    QList<EdgeProperty<int>> edgePropertyList;
+    QVector<VertexProperty> vertexPropertyList(size);
+
+    QHash<Vertex*, unsigned> idMap;
+    for(unsigned i = 0; i < size; ++i) {
+        Vertex* v = vertexList[i];
+        idMap[v] = i;
+        QPointF location = v->mapToScene(0,0);
+        vertexPropertyList[i] = { i, location.x(), location.y() };
+    }
+
+    for(unsigned i = 0; i < size; ++i) {
+        foreach(Edge *e, vertexList[i]->outEdges()) {
+            unsigned j = idMap[e->destVertex()];
+            edgeList << edge_t(i, j);
+            edgePropertyList << e->property();
+        }
+    }
+    
+    graph_t g(edgeList.begin(), edgeList.end(),
+            edgePropertyList.begin(), size);
+    for(unsigned i = 0; i < size; ++i)
+        g[i] = vertexPropertyList[i];
+
+    boost::dynamic_properties dp;
+    dp.property("id", boost::get(&VertexProperty::id, g));
+    dp.property("x", boost::get(&VertexProperty::x, g));
+    dp.property("y", boost::get(&VertexProperty::y, g));
+    dp.property("weight", boost::get(&EdgeProperty<int>::weight, g));
+
+    boost::write_graphviz_dp(out, g, dp, "id");
 }
+
+/* */

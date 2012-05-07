@@ -78,7 +78,9 @@ void MainWindow::newFile() {
 }
 
 void MainWindow::open() {
-    QString fileName = QFileDialog::getOpenFileName(this);
+    QString fileName = QFileDialog::getOpenFileName(this,
+            tr("Select graph file"), tr("."),
+            "GraphViz dot files (*.dot);;All files (*.*)");
     if (!fileName.isEmpty()) {
         MainWindow *existing = findMainWindow(fileName);
         if (existing) {
@@ -112,8 +114,8 @@ bool MainWindow::save() {
 }
 
 bool MainWindow::saveAs() {
-    QString fileName = QFileDialog::getSaveFileName(this, 
-            tr("Lưu với tên ..."), curFile);
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save as ..."), curFile,
+            "GraphViz dot files (*.dot);;All files (*.*)");
 
     if(fileName.isEmpty())
         return false;
@@ -486,7 +488,7 @@ void MainWindow::setCurrentFile(const QString &fileName)
 
     isUntitled = fileName.isEmpty();
     if (isUntitled) {
-        curFile = tr("graph%1.ml").arg(sequenceNumber++);
+        curFile = tr("graph%1.dot").arg(sequenceNumber++);
     } else {
         curFile = QFileInfo(fileName).canonicalFilePath();
     }
