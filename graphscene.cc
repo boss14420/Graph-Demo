@@ -28,6 +28,7 @@
 GraphScene::GraphScene(QMenu *menu,  Algorithm* algo, QObject *parent) 
     : QGraphicsScene(parent), contextMenu(menu), algorithm(algo)
 {
+    vertexIndex = 0;
     mode = MoveItem;
     line = 0;
 //    nEdge = 0;
@@ -49,7 +50,7 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     Vertex *vertex;
     switch(mode) {
         case InsertVertex:
-            vertex = new Vertex(pos.x(), pos.y());
+            vertex = new Vertex(pos.x(), pos.y(), vertexIndex++);
             addItem(vertex);
 //            vertexList << vertex;
             algorithm->addVertex(vertex);
@@ -192,7 +193,7 @@ Vertex* GraphScene::firstVertex(QPointF pos) {
 
 void GraphScene::addRandomVertex() {
     int w = width() - 30, h = height() -30;
-    Vertex *v = new Vertex(-w/2 + qrand() % w, -h/2 + qrand() % h);
+    Vertex *v = new Vertex(-w/2 + qrand() % w, -h/2 + qrand() % h, vertexIndex++);
 //    vertexList << v;
     algorithm->addVertex(v);
     addItem(v);

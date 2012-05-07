@@ -24,7 +24,7 @@
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/depth_first_search.hpp>
+#include <boost/graph/dag_shortest_paths.hpp>
 
 #include "dag_visitor.hpp"
 
@@ -51,23 +51,6 @@ void DAGAnimation::generateAnimList() {
     if(destVertex != nullptr)
         d = boost::vertex(vertexList.indexOf(destVertex), g);
 
-/*     QStringList horizHeaderLabels;
- *     for(auto v : vertexList) horizHeaderLabels << QString::number(v->getId());
- *     QStringList vertHeaderLabels;
- *     vertHeaderLabels << tr("Distance") << tr("Predecessor");
- * 
- *     labelTable->setColumnCount(vertexList.size());
- *     labelTable->setRowCount(2);
- *     labelTable->setHorizontalHeaderLabels(horizHeaderLabels);
- *     labelTable->setVerticalHeaderLabels(vertHeaderLabels);
- * 
- *     labelVector.resize(vertexList.size());
- *     for(int i = 0; i < vertexList.size(); ++i) {
- * //        labelTable->setItem(0, i, new VertexLabel(0));
- *         labelVector[i] = 
- *             std::shared_ptr<VertexLabel>(new VertexLabel(labelTable, i));
- *     }
- */
 
     /* topological sort */
 
@@ -83,6 +66,9 @@ void DAGAnimation::generateAnimList() {
     }
 
     // indexing
+    QHash<Vertex*, qint32> topoOrder;
+    for(Vertex *v : vertexList) topoOrder[v] = -1;
+
     int count = rev_topo_order.size();
     for(int i = 0; i < count; ++i) {
         Vertex *vertex = vertexList[rev_topo_order[i]];
@@ -90,6 +76,8 @@ void DAGAnimation::generateAnimList() {
                         (new QParallelAnimationGroup());
 
         prlAnim->addAnimation(create(vertex, "order", -1, count - i - 1));
+        topoOrder[vertex] = count - i -1;
+
         if(vertex != sourceVertex && vertex != destVertex)
             prlAnim->addAnimation(create(vertex, "color",
                         Vertex::DiscoveredColor, Vertex::InitColor));
@@ -101,6 +89,43 @@ void DAGAnimation::generateAnimList() {
 
 
     /* search for shortest path */
+
+    QStringList horizHeaderLabels;
+    for(auto v : vertexList) 
+        horizHeaderLabels << QString("%1 (%2)").arg(v->getId()).arg(topoOrder[v]);
+    QStringList vertHeaderLabels;
+    vertHeaderLabels << tr("Distance") << tr("Predecessor");
+
+    labelTable->setColumnCount(vertexList.size());
+    labelTable->setRowCount(2);
+    labelTable->setHorizontalHeaderLabels(horizHeaderLabels);
+    labelTable->setVerticalHeaderLabels(vertHeaderLabels);
+
+    labelVector.resize(vertexList.size());
+    for(int i = 0; i < vertexList.size(); ++i) {
+        //        labelTable->setItem(0, i, new VertexLabel(0));
+        labelVector[i] = 
+            std::shared_ptr<VertexLabel>(new VertexLabel(labelTable, i));
+    }
+
+    QVector<qint32> distance_map(vertexList.size(),0);
+//    color_map.assign(vertexList.size(), boost::color_traits<qint32>::white());
+
+    try {
+        boost::dag_shortest_paths(g, s,
+                boost::weight_map(boost::get(&edge_property::weight, g))
+                .distance_map(distance_map.begin())
+//                .color_map(color_map.begin())
+                .visitor(DAGVisitor<graph_t>(
+                        s, d, vertexList, labelVector, distance_map,
+//                        color_map,
+                        animList
+                        )
+                    )
+                );
+    } catch(TargetFoundException& ex) {
+
+    }
 
     /* end search */
 

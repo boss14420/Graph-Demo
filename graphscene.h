@@ -83,6 +83,7 @@ private:
     bool isItemChange(int type);
     Vertex *firstVertex(QPointF);
 
+    int vertexIndex;
     int nEdge;
     bool m_modified;
 

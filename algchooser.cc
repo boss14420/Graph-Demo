@@ -70,6 +70,13 @@ AlgorithmChooserDialog::AlgorithmChooserDialog(QWidget* parent, Qt::WindowFlags 
     algorithmListButtonGroup = new QButtonGroup(this);
     QVBoxLayout *algoLstLayout = new QVBoxLayout;
 
+    bfsRadioButton = new QRadioButton(tr("Breadth-first-search (BFS)"), this);
+    algorithmListButtonGroup->addButton(bfsRadioButton);
+    algoLstLayout->addWidget(bfsRadioButton);
+//    connect(noWeightRadioButton, SIGNAL(toggled(bool)),
+//            bfsRadioButton, SLOT(setEnabled(bool)));
+//    bfsRadioButton->setEnabled(false);
+
     bellmanFordRadioButton = new QRadioButton(tr("Bellman-Ford"), this);
     algorithmListButtonGroup->addButton(bellmanFordRadioButton);
     algoLstLayout->addWidget(bellmanFordRadioButton);
@@ -86,24 +93,6 @@ AlgorithmChooserDialog::AlgorithmChooserDialog(QWidget* parent, Qt::WindowFlags 
 //            dijkstraRadioButton, SLOT(setEnabled(bool)));
 //    dijkstraRadioButton->setEnabled(false);
 
-    dagRadioButton = new QRadioButton(tr("Directed ACyclic Graph (DAG) search"), this);
-    algorithmListButtonGroup->addButton(dagRadioButton);
-    algoLstLayout->addWidget(dagRadioButton);
-//    connect(noCircleCheckBox, SIGNAL(toggled(bool)),
-//            dagRadioButton, SLOT(setEnabled(bool)));
-//    dagRadioButton->setEnabled(false);
-
-    floydWarshallRadioButton = new QRadioButton(tr("Floyd-Warshall"), this);
-    algorithmListButtonGroup->addButton(floydWarshallRadioButton);
-    algoLstLayout->addWidget(floydWarshallRadioButton);
-
-    bfsRadioButton = new QRadioButton(tr("Breadth-first-search (BFS)"), this);
-    algorithmListButtonGroup->addButton(bfsRadioButton);
-    algoLstLayout->addWidget(bfsRadioButton);
-//    connect(noWeightRadioButton, SIGNAL(toggled(bool)),
-//            bfsRadioButton, SLOT(setEnabled(bool)));
-//    bfsRadioButton->setEnabled(false);
-
     aStarRadioButton = new QRadioButton(tr("A* search"), this);
     algorithmListButtonGroup->addButton(aStarRadioButton);
     algoLstLayout->addWidget(aStarRadioButton);
@@ -114,6 +103,19 @@ AlgorithmChooserDialog::AlgorithmChooserDialog(QWidget* parent, Qt::WindowFlags 
 //    connect(noWeightRadioButton, SIGNAL(toggled(bool)),
 //            aStarRadioButton, SLOT(setEnabled(bool)));
 //    aStarRadioButton->setEnabled(false);
+
+
+    dagRadioButton = new QRadioButton(tr("Directed ACyclic Graph (DAG) search"), this);
+    algorithmListButtonGroup->addButton(dagRadioButton);
+    algoLstLayout->addWidget(dagRadioButton);
+//    connect(noCircleCheckBox, SIGNAL(toggled(bool)),
+//            dagRadioButton, SLOT(setEnabled(bool)));
+//    dagRadioButton->setEnabled(false);
+
+    floydWarshallRadioButton = new QRadioButton(tr("Floyd-Warshall"), this);
+    algorithmListButtonGroup->addButton(floydWarshallRadioButton);
+    algoLstLayout->addWidget(floydWarshallRadioButton);
+    floydWarshallRadioButton->setEnabled(false);
 
     QGroupBox *algoLstGroupBox = new QGroupBox(tr("Algorithm"), this);
     algoLstGroupBox->setLayout(algoLstLayout);
